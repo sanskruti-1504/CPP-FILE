@@ -96,7 +96,7 @@ class CakeShop{
 
          cout <<"\n";
          printline();
-         cout << " 🎂SWEET BITES CAKE SHOP🎂\n";
+         cout << " 🎂FANTASY CAKE SHOP🎂\n";
          cout << "1. View All Cakes\n";
          cout << "2. Add New Cakes\n";
          cout << "3. Place an Order\n";
