@@ -201,7 +201,7 @@ void showIssueHistory() {
         "JOIN members ON issued_books.member_id = members.id;";
  
     showResults(sql);
-    cout << "---------------------\n";
+    cout << "**------------------**\n";
 }
  
 
