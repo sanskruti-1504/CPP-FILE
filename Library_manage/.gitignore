@@ -1,8 +1,0 @@
-library.exe
-sqlite3.o
-library.db
-a.exe
-run.bat
-*.o
-*.exe
-*.db
