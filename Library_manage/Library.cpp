@@ -4,16 +4,13 @@
 using namespace std;
  
  
-
 sqlite3* db;
- 
  
 
 void runQuery(string sql) {
     char* error;
     sqlite3_exec(db, sql.c_str(), NULL, NULL, &error);
 }
- 
  
 
 int printRow(void* unused, int cols, char* value[], char* colName[]) {
@@ -25,7 +22,6 @@ int printRow(void* unused, int cols, char* value[], char* colName[]) {
 }
  
  
-
 void showResults(string sql) {
     char* error;
     sqlite3_exec(db, sql.c_str(), printRow, NULL, &error);
@@ -66,8 +62,6 @@ void createTables() {
     runQuery(sql3);
 }
  
- 
-
  
 void addBook() {
     string title, author;
@@ -119,8 +113,6 @@ void deleteBook() {
 }
  
  
-
- 
 void addMember() {
     string name, email;
  
@@ -145,8 +137,6 @@ void showAllMembers() {
     cout << "-------------------\n";
 }
  
- 
-
  
 void issueBook() {
     showAllBooks();
@@ -218,7 +208,6 @@ void showIssueHistory() {
 }
  
  
-
 int main() {
  
     
