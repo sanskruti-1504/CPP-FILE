@@ -4,27 +4,18 @@
 using namespace std;
  
  
-// ---------------------------------------------------------------
-// DATABASE CONNECTION
-// db is the "connection" to our library.db file
-// ---------------------------------------------------------------
+
 sqlite3* db;
  
  
-// ---------------------------------------------------------------
-// HELPER FUNCTION: Run any SQL query
-// Used for INSERT, UPDATE, DELETE, CREATE
-// ---------------------------------------------------------------
+
 void runQuery(string sql) {
     char* error;
     sqlite3_exec(db, sql.c_str(), NULL, NULL, &error);
 }
  
  
-// ---------------------------------------------------------------
-// HELPER FUNCTION: Print results of SELECT query
-// SQLite calls this for every row it finds
-// ---------------------------------------------------------------
+
 int printRow(void* unused, int cols, char* value[], char* colName[]) {
     for (int i = 0; i < cols; i++) {
         cout << colName[i] << ": " << value[i] << "  |  ";
@@ -34,30 +25,25 @@ int printRow(void* unused, int cols, char* value[], char* colName[]) {
 }
  
  
-// ---------------------------------------------------------------
-// HELPER FUNCTION: Run SELECT and print all rows
-// ---------------------------------------------------------------
+
 void showResults(string sql) {
     char* error;
     sqlite3_exec(db, sql.c_str(), printRow, NULL, &error);
 }
  
  
-// ---------------------------------------------------------------
-// CREATE TABLES (runs once when program starts)
-// ---------------------------------------------------------------
 void createTables() {
  
-    // books table
+    
     string sql1 =
         "CREATE TABLE IF NOT EXISTS books ("
         "id       INTEGER PRIMARY KEY AUTOINCREMENT, "
         "title    TEXT, "
         "author   TEXT, "
-        "is_issued INTEGER DEFAULT 0"   // 0 = available, 1 = issued
+        "is_issued INTEGER DEFAULT 0"   
         ");";
  
-    // members table
+    
     string sql2 =
         "CREATE TABLE IF NOT EXISTS members ("
         "id    INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -65,14 +51,14 @@ void createTables() {
         "email TEXT"
         ");";
  
-    // issued_books table: stores who took which book
+    
     string sql3 =
         "CREATE TABLE IF NOT EXISTS issued_books ("
         "id          INTEGER PRIMARY KEY AUTOINCREMENT, "
         "book_id     INTEGER, "
         "member_id   INTEGER, "
         "issue_date  TEXT, "
-        "return_date TEXT"    // empty means not returned yet
+        "return_date TEXT"    
         ");";
  
     runQuery(sql1);
@@ -81,9 +67,7 @@ void createTables() {
 }
  
  
-// ================================================================
-//  BOOK FUNCTIONS
-// ================================================================
+
  
 void addBook() {
     string title, author;
@@ -135,9 +119,7 @@ void deleteBook() {
 }
  
  
-// ================================================================
-//  MEMBER FUNCTIONS
-// ================================================================
+
  
 void addMember() {
     string name, email;
@@ -164,9 +146,7 @@ void showAllMembers() {
 }
  
  
-// ================================================================
-//  ISSUE & RETURN FUNCTIONS
-// ================================================================
+
  
 void issueBook() {
     showAllBooks();
@@ -179,11 +159,11 @@ void issueBook() {
     cout << "Enter Member ID       : ";
     cin >> memberId;
  
-    // Add a record in issued_books table
+    
     string sql1 = "INSERT INTO issued_books (book_id, member_id, issue_date, return_date) "
                   "VALUES (" + to_string(bookId) + ", " + to_string(memberId) + ", date('now'), '');";
  
-    // Mark book as issued in books table
+    
     string sql2 = "UPDATE books SET is_issued = 1 WHERE id = " + to_string(bookId) + ";";
  
     runQuery(sql1);
@@ -194,7 +174,7 @@ void issueBook() {
  
  
 void returnBook() {
-    // Show only issued books (is_issued = 1)
+    
     cout << "\n--- ISSUED BOOKS ---\n";
     string sql = "SELECT * FROM books WHERE is_issued = 1;";
     showResults(sql);
@@ -204,11 +184,11 @@ void returnBook() {
     cout << "Enter Book ID to return: ";
     cin >> bookId;
  
-    // Set return date
+   
     string sql1 = "UPDATE issued_books SET return_date = date('now') "
                   "WHERE book_id = " + to_string(bookId) + " AND return_date = '';";
  
-    // Mark book as available
+    
     string sql2 = "UPDATE books SET is_issued = 0 WHERE id = " + to_string(bookId) + ";";
  
     runQuery(sql1);
@@ -221,8 +201,7 @@ void returnBook() {
 void showIssueHistory() {
     cout << "\n--- ISSUE HISTORY ---\n";
  
-    // Simple JOIN: combine all 3 tables to show readable info
-    // Instead of showing just IDs, we show title and name
+    
     string sql =
         "SELECT "
         "  issued_books.id, "
@@ -239,16 +218,13 @@ void showIssueHistory() {
 }
  
  
-// ================================================================
-//  MAIN MENU
-// ================================================================
- 
+
 int main() {
  
-    // Open database file (creates library.db if not exists)
+    
     sqlite3_open("library.db", &db);
  
-    // Create tables on first run
+    
     createTables();
  
     cout << "\nWelcome to Library Management System\n";
@@ -286,6 +262,6 @@ int main() {
  
     } while (choice != 0);
  
-    sqlite3_close(db);   // close database before exit
+    sqlite3_close(db);   
     return 0;
 }
